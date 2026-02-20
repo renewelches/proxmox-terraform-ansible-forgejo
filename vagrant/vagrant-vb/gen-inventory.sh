@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Generates ansible/inventory/dev/vagrant-vb/forgejo-stack/inventory.ini from vagrant ssh-config.
-# Run from this directory (vagrant/vagrant-vb/forgejo-stack/).
+# Generates ansible/inventory/dev/vagrant-vb/inventory.ini from vagrant ssh-config.
+# Run from this directory (vagrant/vagrant-vb/).
 #
 # Usage: ./gen-inventory.sh <forgejo_domain>
 #   Example: ./gen-inventory.sh forgejo.example.com
@@ -8,7 +8,7 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-INVENTORY_OUT="${SCRIPT_DIR}/../../../ansible/inventory/dev/vagrant-vb/forgejo-stack/inventory.ini"
+INVENTORY_OUT="${SCRIPT_DIR}/../../ansible/inventory/dev/vagrant-vb/inventory.ini"
 
 FORGEJO_DOMAIN="${1:-}"
 if [ -z "$FORGEJO_DOMAIN" ]; then
