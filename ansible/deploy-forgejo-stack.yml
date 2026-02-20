@@ -62,6 +62,7 @@
         name: forgejo
         image: codeberg.org/forgejo/forgejo:10
         state: started
+        pull: always
         restart_policy: unless-stopped
         ports:
           - "443:3000"
