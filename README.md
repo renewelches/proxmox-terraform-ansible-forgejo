@@ -48,6 +48,8 @@ openssl req -x509 -newkey rsa:2048 -nodes \
   -addext "subjectAltName=DNS:forgejo.example.com"
 ```
 
+See [homelab-self-signed-cert-setup](https://github.com/renewelches/homelab-self-signed-cert-setup) if you want to create your own ROOT CA for self signing.
+
 ## Project Structure
 
 ```
