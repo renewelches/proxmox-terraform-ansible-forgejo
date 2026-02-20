@@ -1,0 +1,29 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+# Prerequisite: vagrant plugin install vagrant-utm
+
+Vagrant.configure("2") do |config|
+  # Forgejo: 2 vCPU, 2 GB RAM, private IP 192.168.56.10
+  config.vm.define "forgejo" do |vm|
+    vm.vm.box = "utm/debian-12"
+    vm.vm.hostname = "forgejo"
+    vm.vm.synced_folder ".", "/vagrant", disabled: true
+    vm.vm.network "private_network", ip: "192.168.56.10"
+    # Forgejo HTTPS web UI
+    vm.vm.network "forwarded_port", guest: 3000, host: 3000
+    # Forgejo git SSH
+    vm.vm.network "forwarded_port", guest: 2222, host: 2222
+    vm.vm.provider "utm" do |utm|
+      utm.name = "forgejo"
+      utm.memory = 2048
+      utm.cpus = 2
+    end
+    vm.vm.provision "shell", inline: <<-SHELL
+      apt-get update
+      apt-get install -y docker.io docker-compose
+      systemctl enable docker
+      systemctl start docker
+      usermod -aG docker vagrant
+    SHELL
+  end
+end
