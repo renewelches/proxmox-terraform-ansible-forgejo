@@ -1,6 +1,10 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+require "fileutils"
+
+FORGEJO_DOMAIN = ENV["FORGEJO_DOMAIN"] || raise("FORGEJO_DOMAIN env var is required. Example: FORGEJO_DOMAIN=forgejo.example.com vagrant up")
+
 Vagrant.configure("2") do |config|
   # Forgejo: 2 vCPU, 2 GB RAM, 50 GB disk, private IP 192.168.56.10
   config.vm.define "forgejo" do |vm|
@@ -25,5 +29,29 @@ Vagrant.configure("2") do |config|
       systemctl start docker
       usermod -aG docker vagrant
     SHELL
+
+    vm.trigger.after :up do |trigger|
+      trigger.ruby do |env, machine|
+        ssh = machine.ssh_info
+        inventory_path = File.expand_path("../../ansible/inventory/dev/vagrant-vb/inventory.ini", __dir__)
+        FileUtils.mkdir_p(File.dirname(inventory_path))
+        File.write(inventory_path, <<~INI)
+          [all]
+          forgejo ansible_host=#{ssh[:host]} ansible_port=#{ssh[:port]} ansible_ssh_private_key_file=#{ssh[:private_key_path].first}
+
+          [containers]
+          forgejo
+
+          [forgejo]
+          forgejo
+
+          [all:vars]
+          ansible_user=vagrant
+          ansible_python_interpreter=/usr/bin/python3.13
+          forgejo_domain=#{FORGEJO_DOMAIN}
+        INI
+        puts "Inventory written to: #{inventory_path}"
+      end
+    end
   end
 end
