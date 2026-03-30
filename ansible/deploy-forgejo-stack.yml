@@ -60,7 +60,7 @@
     - name: Run Forgejo container
       community.docker.docker_container:
         name: forgejo
-        image: codeberg.org/forgejo/forgejo:10
+        image: codeberg.org/forgejo/forgejo:11
         state: started
         pull: always
         restart_policy: unless-stopped

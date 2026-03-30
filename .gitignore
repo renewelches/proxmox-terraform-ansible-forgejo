@@ -40,3 +40,4 @@ ansible/files/**/*.crt
 
 # OS
 .DS_Store
+CLAUDE.md
